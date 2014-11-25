@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
 
         # Add to /etc/hosts: 33.33.33.77 dxr
         config.vm.network "private_network", ip: "33.33.33.77"
-        config.vm.network "forwarded_port", guest: 80, host: 8000
+        config.vm.network "forwarded_port", guest: 8000, host: 8000
     end
 
     if CONF['boot_mode'] == 'gui'

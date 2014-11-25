@@ -49,42 +49,6 @@ class Config(DefaultConfig):
 THEEND
 fi
 
-# Apache:
-apt-get install -y apache2-dev apache2
-mkdir -p /etc/apache2/sites-enabled
-if [ ! -e /etc/apache2/sites-enabled/dxr.conf ]; then
-    cat >/etc/apache2/sites-enabled/dxr.conf <<THEEND
-# This is an example of serving a DXR target directory with Apache. To try it
-# out, go into tests/test_basic and run "make". Everything but a few static
-# files is delegated to a WSGI process.
-#
-# This should be adaptable to serve at non-root positions in the URL hierarchy.
-
-<VirtualHost *:80>
-    # Serve static resources, like CSS and images, with plain Apache:
-    Alias /static/ /home/vagrant/dxr/dxr/static/
-
-    # We used to make special efforts to also serve the static pages of
-    # HTML-formatted source code from the tree via plain Apache, but that
-    # tangle of RewriteRules saved us only about 20ms per request. You can do
-    # it if you're on a woefully underpowered machine, but I'm not maintaining
-    # it.
-
-    # Tell this instance of DXR where its target folder is:
-    SetEnv DXR_FOLDER /home/vagrant/dxr/tests/test_basic/target/
-
-    # On a production machine, you'd typically do "python setup.py install"
-    # rather than "python setup.py develop", so this would point inside your
-    # site-packages directory.
-    WSGIScriptAlias / /home/vagrant/dxr/dxr/dxr.wsgi
-</VirtualHost>
-THEEND
-    chmod 0644 /etc/apache2/sites-enabled/dxr.conf
-fi
-a2enmod rewrite
-a2enmod proxy
-a2dissite 000-default
-
 # DXR itself:
 # pkg-config is so (trilite's?) make clean works.
 apt-get install -y git llvm-3.5 libclang-3.5-dev clang-3.5 pkg-config
